@@ -1,0 +1,195 @@
+스프링에서, 시큐리티 , 범위 매우 넓습니다.
+웹, 백, 앱, 응용,
+Spring web Security -> 시큐리티라고 부를 예정.
+
+인증(authentication, 로그인), 인가(authority 허가, 관리자, 유저)
+예)
+인증
+로그인 한 유저만 볼수 있고,
+게시글 목록은 ,
+게시글 작성, 댓글 작성.
+
+인가.
+관리자 페이지 접근 - 관리자만, 일반 유저는 접근 못하게 막기.
+
+
+인증
+1) 폼 방식으로, (세션, 쿠키등을 이용해서) 인증
+2) 토큰을 이용하는 방식.(JWT), 프론트 - 백엔드(레스트로만구성시)
+3) 기타, 생체인증, OTP, 2단계 인증.
+
+인증, 인가, 자동로그인, 카카오 로그인 api(닉네임까지 정보제공)
+네이버 로그인 api ,
+
+기본 설정.
+
+build.gradle
+도구 설치,
+파란색 교재, maven 빌드 툴, pom.xml
+mavenRepository 사이트 들어가면, 2가지 경우의 도구 설치 링크 다 있음.
+
+Spring Boot Starter Security » 3.3.0
+
+// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
+implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '3.3.0'
+
+설치시,
+스프링에서, 기본이, get 제외한 모든 형식의 통신을 다 차단함.
+기본값으로 콘솔에서,
+id : user
+pw : 콘솔에서 매번 변경이 된 패스워드 제공해줌.
+로그인 폼 제공, 로그 아웃 제공, 로그인 로직 처리 해줌.
+
+샘플 : 매번 변경
+Using generated security password: 668de4cb-edd3-4567-b116-1144b65d933b
+
+확인시,
+매번, 인텔리제이에서 작업 후, 크롬등으로 이동시,
+매번 자동 리로드 , 패스워드 가 계속 생성이 되어서 ,
+확인 못함.
+해결책.
+application.properties
+# devtools 끄기
+spring.devtools.restart.enabled=false
+
+서버 다시 켜고 확인 하면됨.
+
+그러면, 시큐리티 통해서 , 리스트, 다른 작업이 가능함.
+
+강제로 로그아웃
+크롬 -> 개발자도구 -> 애플리케이션 -> 쿠키 -> JSESSIONID 삭제 하면, 로그 아웃.
+
+시큐리티 설정 방법
+1) application.properties
+2) 설정 클래스를 이용하는 방법.
+
+우리는 설정 클래스를 이용해서 설정 및 확인 할 예정.
+
+로깅을 trace 설정을 했고, 조금 더 구체적으로 확인 하기 위해서.
+
+style.css, .js , 정적 자원, 시큐리티 설정을 할 필요가 없다.
+
+그래서, 제외 하기.
+
+ //정적 자원 시큐리티 필터 항목에 제외하기.
+    @Bean
+    public WebSecurityCustomizer webSecurityCustomizer() {
+        log.info("시큐리티 동작 확인 ====webSecurityCustomizer======================");
+        return (web) ->
+                web.ignoring()
+                        .requestMatchers(PathRequest.toStaticResources().atCommonLocations());
+    }
+
+
+기존 방식과 , 시큐리티의 차이점.
+아이디, 패스워드 의 일치 여부에 따라서, 인증만.
+시큐리티에서는 username 으로 해당 정보를 조회를 해서, 인증, 인가 확인을 함.
+
+샘플
+public class CustomUserDetailsService implements UserDetailsService {
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        log.info("시큐리티 loadUserByUsername 확인 : "+ username);
+        return null;
+    }
+
+UserDetails 의 대표적인 추상메서드
+- getAuthorities , 로그인한 유저의 인증 정보를 가지고 있다.
+
+시큐리티에서는 유저의 패스워드의 평문을 싫어합니다.
+해싱을 한 , 인코딩이된 값을 좋아라함. 그래서, 이게 기본값.
+우리는 해시 함수 클래스를 선정을해서, 빈으로 시스템에 등록을 의무적으로 해야함.
+PasswordEncoder 중에서,
+BCryptPasswordEncoder 라는 클래스를 이용할 예정.
+pw : 1111 -> 해시 함수를 이용한 매번 다른 문자열로 암호화함.
+
+
+특정 페이지 이동시 , 권한을 확인 후 이동하는 설정.
+1) 설정 클래스
+2) 어노테이션
+이용할 예정,
+사용방법,
+설정 클래스에서.
+// 어노테이션을 이용해서, 특정 권한 있는 페이지 접근시, 구분가능.
+@EnableGlobalMethodSecurity(prePostEnabled = true)
+
+사용 예)
+컨트롤러 등에서.
+ //글쓰기 처리
+    // 로그인한 유저이고, 일반 유저, 글쓰기가 가능하게끔 설정.
+    @PreAuthorize("hasRole('USER')")
+    @PostMapping("/register")
+
+사용하는 형식
+- authenticated() : 인증된 사용자들만 허용.
+- permitAll() : 모두 허용.
+- anonymous() : 익명의 사용자 허용(비회원)
+- hasRole(표현식) : 특정한 권한이 있는 사용자 허용.
+- hasAnyRole(표현식) : 여러 권한 중 하나만 존재해도 허용.
+
+버전 변경으로 문법 변경하기.
+여기 샘플 코드 활용하기.
+공식 문서 : https://spring.io/guides/gs/securing-web
+
+1
+@EnableWebSecurity
+public class CustomSecurityConfig {
+
+}
+
+2
+ @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+ http.formLogin(
+                formLogin -> formLogin.loginPage("/shopMember/login").permitAll()
+        );
+        // 기본은 csrf 설정이 on, 작업시에는 끄고 작업하기.
+        http.csrf(httpSecurityCsrfConfigurer -> httpSecurityCsrfConfigurer.disable());
+
+        http.authorizeRequests()
+                .requestMatchers("/css/**", "/js/**","/image/**").permitAll()
+                // 리스트는 기본으로 다 들어갈수 있게.
+                .requestMatchers("/", "/board/list", "/login", "/joinUser","/joinForm","/findAll","/images/**").permitAll()
+                // 로그인 후 확인 하기.
+                .requestMatchers("/board/register").hasRole("USER")
+                //
+                .requestMatchers("/admin","/images","/board/update").hasRole("ADMIN")
+                // 위의 접근 제어 목록 외의 , 다른 어떤 요청이라도 반드시 인증이 되어야 접근이 된다.
+                .anyRequest().authenticated()
+        ;
+
+        return http.build();
+
+    }
+
+시큐리티 시스템에서 정한 로그 아웃.
+http://localhost:8080/shopMember/login?logout
+
+3. 자동 로그인을 위한 테이블
+스프링에서 제공하는 테이블명 : persistent_logins , 동일해야함.
+create table persistent_logins(
+    username varchar(64) not null,
+    series varchar(64) primary key,
+    token varchar(64) not null,
+    last_used timestamp not null
+);
+
+
+화면에서, 인증이 된 유저일 경우, 조건에 맞게, 특정의 화면이 보이게 할려면,
+도구가 필요해요, 타임리프에서
+thymeleaf-extras-springsecurity6  도구가 필요해요
+
+// https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity6
+    implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity6', version: '3.1.2.RELEASE'
+
+.
+예) 로그인 유저일 경우, 로그 아웃 버튼을 보이게 하거나,
+관라지 일 경우 ,관리자 페이지 링크가 보이게 하거나, 등.
+
+register.html 에서,
+유저 권한별 화면 표시하는 도구 사용하기 위해서 설정 태그 추가.
+xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
+
+
+

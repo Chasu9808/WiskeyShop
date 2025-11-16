@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+    <meta name="description" content=""/>
+    <meta name="author" content=""/>
+    <title>Simple Sidebar - Login</title>
+    <!-- Favicon-->
+    <link rel="icon" type="image/x-icon" th:href="@{/assets/favicon.ico}"/>
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link th:href="@{/css/styles.css}" rel="stylesheet"/>
+</head>
+<body class="align-middle">
+<div class="container-fluid d-flex justify-content-center" style="height: 100vh">
+
+    <div class="card align-self-center">
+        <div class="card-header">
+            LOGIN Page
+        </div>
+        <div class="card-body">
+            <th:block th:if="${param.logout != null}">
+                <h1>Logout........</h1>
+            </th:block>
+
+            <th:block th:if="${param.error != null }">
+                <h1>접근 권한이 없습니다. 다시 로그인해주세요</h1>
+            </th:block>
+
+            <form id="registerForm" action="/member/login" method="post">
+                <div class="input-group mb-3">
+                    <span class="input-group-text">아이디</span>
+                    <input type="text" name="username" class="form-control" placeholder="USER ID">
+                </div>
+                <div class="input-group mb-3">
+                    <span class="input-group-text">패스워드</span>
+                    <input type="password" name="password" class="form-control" placeholder="PASSWORD">
+                </div>
+                <div class="input-group mb-3 ">
+                    <input class="form-check-input" type="checkbox" name="remember-me">
+                    <label class="form-check-label">
+                        자동 로그인
+                    </label>
+                </div>
+                <div class="my-4">
+                    <button type="button" class="btn btn-primary w-100 joinBtn">Join</button>
+                </div>
+                <div class="my-4">
+                    <button type="submit" class="btn btn-primary w-100 submitBtn">LOGIN</button>
+                </div>
+            </form>
+
+            <a href="/oauth2/authorization/kakao">
+                <img th:src="@{/images2/login/kakao_login_medium_narrow.png}" alt="카카오 로그인 화면">
+            </a>
+        </div><!--end card body-->
+    </div><!--end card-->
+</div>
+<script>
+    document.querySelector(".joinBtn").addEventListener("click", function (e) {
+        e.preventDefault()
+        e.stopPropagation()
+        self.location = "/member/join"
+
+    })
+</script>
+</body>
+</html>

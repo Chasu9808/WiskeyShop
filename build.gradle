@@ -1,0 +1,115 @@
+// 변수 선언,  queryDslVersion = '5.0.0'
+buildscript {
+    ext {
+        queryDslVersion = "5.0.0"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.3.0'
+    id 'io.spring.dependency-management' version '1.1.5'
+}
+
+group = 'com.busanit501'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    sourceCompatibility = '17'
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+        developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    runtimeOnly 'org.mariadb.jdbc:mariadb-java-client'
+
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    //테스트 환경에서, 롬복 이용하기.
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+
+    // 공통 레이아웃 기능 이용하기.
+    // https://mvnrepository.com/artifact/nz.net.ultraq.thymeleaf/thymeleaf-layout-dialect
+    implementation group: 'nz.net.ultraq.thymeleaf', name: 'thymeleaf-layout-dialect', version: '3.1.0'
+
+    // https://mvnrepository.com/artifact/com.querydsl/querydsl-jpa
+    // 방법1
+//    implementation group: 'com.querydsl', name: 'querydsl-jpa', version: '5.0.0'
+
+
+    //Querydsl 도구 설치.
+    // 방법2,
+    implementation "com.querydsl:querydsl-jpa:${queryDslVersion}:jakarta"
+
+    // 모델 맵퍼 도구 설치.
+    // https://mvnrepository.com/artifact/org.modelmapper/modelmapper
+    implementation group: 'org.modelmapper', name: 'modelmapper', version: '3.1.0'
+
+// 서버에서 유효성 체크 도구
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-validation', version: '3.3.0'
+
+// Swagger UI, RESTful 테스트를 위한 화면 제공 툴.
+    implementation group: 'org.springdoc', name: 'springdoc-openapi-starter-webmvc-ui', version: '2.5.0'
+
+    // https://mvnrepository.com/artifact/net.coobird/thumbnailator
+    // 썸네일 도구
+    implementation group: 'net.coobird', name: 'thumbnailator', version: '0.4.20'
+
+    // 시큐리티 도구
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-security
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-security', version: '3.3.0'
+
+    // 타임리프 화면에서, 인증된 유저 마다 화면 조건식으로 표현하는 도구
+    // https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity6
+    // https://mvnrepository.com/artifact/org.thymeleaf.extras/thymeleaf-extras-springsecurity6
+    implementation group: 'org.thymeleaf.extras', name: 'thymeleaf-extras-springsecurity6', version: '3.1.2.RELEASE'
+
+
+    // 소셜 로그인 쉽게 도와주는 도구. 카카오, 네이버 , 구글.
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-client
+    implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client', version: '3.3.0'
+
+    annotationProcessor(
+            "jakarta.persistence:jakarta.persistence-api",
+            "jakarta.annotation:jakarta.annotation-api",
+            "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta")
+
+
+}
+
+//작업중
+tasks.named('test') {
+    useJUnitPlatform()
+}
+
+// 프로젝트 빌드 폴더에 소스 파일등을 자동으로 변경하는 코드.
+sourceSets {
+
+    main {
+        java {
+            srcDirs = ["$projectDir/src/main/java", "$projectDir/build/generated"]
+        }
+    }
+}
+
+
+compileJava.dependsOn('clean')

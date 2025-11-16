@@ -1,0 +1,98 @@
+카카오 개발자 사이트 ,
+가입 및 로그인
+https://developers.kakao.com/console/app
+순서
+1 내 애플리케이션 접속
+2 추가하기
+- 앱이름
+- 회사명
+- 카테고리 : 나는 교육
+- 체크 항목 체크하기.
+3 사이드 메뉴 플랫폼
+- 웹 선택.
+- http://localhost:8080 등록
+4 사이드 보안 메뉴
+-secret 코드 생성 하고
+키 보관
+2Nr92L****************SXp4JzrZu
+- 보안 활성화 on
+
+5 사이드 메뉴 카카오 로그인
+- 카카오 로그인 활성화
+- Redirect URI : 입력
+http://localhost:8080/login/oauth2/code/kakao
+
+6 중요, 사이드 메뉴 동의 항목
+- 개인정보 동의항목 심사 신청 클릭
+- 비즈 앱 전환
+- 필수로 수정 클릭 , 이미지 변경
+- 카카오 비즈니스 통합 서비스 약관 동의 후
+- 카카오 비즈니스 계정 만들기.
+- 개인 개발자 전환 클릭.
+- 전환 목적 : 이메일 필수 동의
+
+7 사이드 메뉴 동의 화면
+필수 체크
+이메일, 닉네임, 프로필 이미지
+동의 목적 , 교육 테스트
+
+8 사이드 메뉴 앱키
+- REST API 키 값 복사하기.
+43403e***************5b5fed62
+--------------------------------------------------
+스프링 도구 설치 및 설정.
+9 build.gradle
+oauth2-client
+
+// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-client
+implementation group: 'org.springframework.boot', name: 'spring-boot-starter-oauth2-client', version: '3.3.0'
+
+10
+application.properties 에서 카카오 로그인 API 관련 설정 코드
+여기서, 다 샘플코드 이고,
+1) 시크릿 코드
+2) REST API 키
+2가지만 변경
+
+-----------------------------------------------------------
+#카카오 로그인 API 관련 설정
+spring.security.oauth2.client.provider.kakao.authorization-uri=https://kauth.kakao.com/oauth/authorize
+spring.security.oauth2.client.provider.kakao.user-name-attribute=id
+spring.security.oauth2.client.provider.kakao.token-uri=https://kauth.kakao.com/oauth/token
+spring.security.oauth2.client.provider.kakao.user-info-uri=https://kapi.kakao.com/v2/user/me
+
+spring.security.oauth2.client.registration.kakao.client-name=kakao
+spring.security.oauth2.client.registration.kakao.authorization-grant-type=authorization_code
+spring.security.oauth2.client.registration.kakao.redirect_uri=http://localhost:8080/login/oauth2/code/kakao
+# REST API 키 값 복붙
+spring.security.oauth2.client.registration.kakao.client-id=
+
+# secret 값 복붙
+spring.security.oauth2.client.registration.kakao.client-secret=
+spring.security.oauth2.client.registration.kakao.client-authentication-method=POST
+spring.security.oauth2.client.registration.kakao.scope=profile_nickname,account_email, profile_image
+
+
+코드 작업 순서
+1
+1)CustomSecurityConfig 안의
+
+2) securityFilterChain 메서드
+
+3)
+  //카카오 로그인 API 설정
+        http.oauth2Login(
+                oauthLogin -> oauthLogin.loginPage("/shopMember/login")
+        );
+
+2 login.html
+카카오 링크 주소 고정, 이미지 공식 개발자 센터에서 다운 받기.
+<a href="/oauth2/authorization/kakao">
+    <img th:src="@{/images/login/kakao_login_medium_narrow.png}" alt="카카오 로그인 화면">
+</a>
+
+3. 동의 화면이 나오고 나서, 시큐리티 타입에 맞게 설정.
+시큐리티 원하는 UserDetails 타입으로 반환 해주기 원해요.
+그래서, 그 틀 맞춰서 추가 설정.
+
+

@@ -1,0 +1,57 @@
+
+/*회원 가입시, 이미지 미리보기 화면*/
+#preview-container {
+    margin-top: 20px;
+}
+
+#imagePreview {
+    width: 150px;
+    height: 150px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    object-fit: cover; /* 이미지가 잘림 없이 원형에 맞게 */
+}
+
+
+/*헤더 부분 오른쪽으로 정렬하기*/
+.parent-header-container {
+    position: relative; /* 부모 컨테이너를 상대 위치로 설정 */
+    /*width: 300px;*/
+    /*height: 200px;*/
+    /*border: 1px solid #000;*/
+}
+
+.fixed-header-element {
+    position: absolute; /* 고정 요소를 절대 위치로 설정 */
+    top: 50%; /* 세로 중앙 정렬 */
+    right: 0; /* 오른쪽에 고정 */
+    transform: translateY(-50%); /* 세로 중앙으로 이동 */
+    /*background-color: lightcoral;*/
+    padding: 10px;
+    /*border: 1px solid #000;*/
+}
+
+/*프로필 이미지 모양 변경*/
+.profile-image {
+    width: 50px; /* 가로 크기 */
+    /*height: 100px; !* 세로 크기 *!*/
+    border-radius: 50%; /* 원형 모양 */
+    object-fit: cover; /* 이미지 잘림 없이 중앙 맞춤 */
+    border: 2px solid #fff; /* 흰색 테두리 */
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.15); /* 그림자 효과 */
+}
+
+.paging-container {
+    display: flex;
+    justify-content: center; /* 가로 중앙정렬 */
+    align-items: center; /* 세로 중앙정렬 */
+    height: 10vh;
+    /* 부모 요소의 높이를 100%로 설정 *
+     },
+     .paging-content {
+       width: 10vw;
+       height: 100px;
+       background-color: lightblue;
+       text-align: center; /* 텍스트 가로 중앙정렬 */
+    /*line-height: 100px; !* 텍스트 세로 중앙정렬 *!*/
+}
