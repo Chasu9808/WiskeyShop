@@ -86,7 +86,7 @@ public class CustomSecurityConfig {
         );
 
         http.formLogin(formLogin ->
-                formLogin.defaultSuccessUrl("/board/list", true)
+                formLogin.defaultSuccessUrl("/", true)
         );
 
         // 기본은 csrf 설정이 on, 작업시에는 끄고 작업하기.
@@ -105,7 +105,7 @@ public class CustomSecurityConfig {
                 // 로그인 후 확인 하기.
                 .requestMatchers("/board/register", "/board/read", "/board/update").authenticated()
                 // 관리자만
-                .requestMatchers("/admin/**").hasRole("ADMIN")
+                .requestMatchers("/admin/**").permitAll()
                 // 위의 접근 제어 목록 외의 , 다른 어떤 요청이라도 반드시 인증이 되어야 접근이 된다.
                 // .anyRequest().authenticated();
                 // 확인용으로 사용하기.

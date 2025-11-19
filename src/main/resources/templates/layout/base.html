@@ -3,118 +3,119 @@
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6"
       xmlns:th="www.thymeleaf.org">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <title>Bootstrap demo</title>
-        <!--    우리가 정의한 css 파일, 부트에서 resources > static , 시스템에 자동 경로 설정-->
-        <link th:href="@{/css/styles.css}" rel="stylesheet">
-        <link th:href="@{/css/style2.css}" rel="stylesheet">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
-              integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
-              crossorigin="anonymous">
-    </head>
-    <!--    5.1 부트스트랩 확인-->
-    <!--    <link th:href="@{/css/styles.css}" rel="stylesheet" />-->
-    </head>
-    <body>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Bootstrap demo</title>
+    <!--    우리가 정의한 css 파일, 부트에서 resources > static , 시스템에 자동 경로 설정-->
+    <link th:href="@{/css/styles.css}" rel="stylesheet">
+    <link th:href="@{/css/style2.css}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+          crossorigin="anonymous">
+</head>
+<!--    5.1 부트스트랩 확인-->
+<!--    <link th:href="@{/css/styles.css}" rel="stylesheet" />-->
+</head>
+<body>
 
-        <!--확인1-->
-        <div class="container-fluid">
-            <div class="row">
-                <!--    NavBar 가져와서 적용해보기-->
-                <div class="col">
-                    <nav class="navbar navbar-expand-lg " style="background-color: #b0f89d;">
-                        <!--      <nav class="navbar bg-primary navbar-expand-lg bg-body-tertiary bg-primary"  data-bs-theme="" >-->
-                        <!--      <nav class="navbar bg-primary" data-bs-theme="dark">-->
-                        <div class="container-fluid">
-                            <a class="navbar-brand" href="/board/list">목록가기</a>
-                            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-                                    data-bs-target="#navbarTogglerDemo02"
-                                    aria-controls="navbarTogglerDemo02" aria-expanded="false"
-                                    aria-label="Toggle navigation">
-                                <span class="navbar-toggler-icon"></span>
-                            </button>
-                            <div class="collapse navbar-collapse " id="navbarTogglerDemo02">
-                                <ul class="navbar-nav me-auto mb-2 mb-lg-0 " >
-                                    <li class="nav-item">
-                                        <a class="nav-link" aria-current="page" href="/board/register">글작성</a>
-                                    </li>
-                                    <li class="nav-item " th:if="${user} != null">
-                                        <a class="nav-link" href="/">Shop</a>
-                                    </li>
-
-                                    <li class="nav-item " th:if="${user} != null and ${user.social.toString().equals('false')}">
-                                        <a class="nav-link" href="/member/logout">로그아웃</a>
-                                    </li>
-                                    <li class="nav-item " th:if="${user} != null and ${user.social.toString().equals('true')}">
-                                        <a class="nav-link" href="/member/kakaoLogout">소셜 로그아웃</a>
-                                    </li>
-                                    <li class="nav-item " th:if="${user} != null">
-                                        <a class="nav-link" href="/member/update">마이페이지</a>
-                                    </li>
-                                    <li class="nav-item " th:if="${user} != null">
-                                        <a class="nav-link" href="/sampleMap-Naver/1-map-simple">네이버지도 샘플</a>
-                                    </li>
-                                    <li class="nav-item " th:if="${user} != null">
-                                        <a class="nav-link" href="#">[[${user.mid}]]님 환영합니다.</a>
-                                    </li>
-                                    <li class="nav-item " th:if="${user} != null">
-                                        <div th:if="${user.uuid != null && user.fileName != null}">
-                                            <img class="profile-image mt-1 "
-                                                 th:src="|/view/s_${user.uuid}_${user.fileName}|">
-                                        </div>
-                                    </li>
-                                    <li class="nav-item " th:if="${user} != null">
-                                        <div th:if="${user.profileImageServer != null}">
-                                            <img class="profile-image mt-1 "
-                                                 th:src="${user.profileImageServer}">
-                                        </div>
-                                    </li>
-
-                                </ul>
+<!--확인1-->
+<div class="container-fluid">
+    <div class="row">
+        <!--    NavBar 가져와서 적용해보기-->
+        <div class="col">
+            <nav class="navbar navbar-expand-lg " style="background-color: #b0f89d;">
+                <!--      <nav class="navbar bg-primary navbar-expand-lg bg-body-tertiary bg-primary"  data-bs-theme="" >-->
+                <!--      <nav class="navbar bg-primary" data-bs-theme="dark">-->
+                <div class="collapse navbar-collapse " id="navbarTogglerDemo02">
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 " >
+                        <li class="nav-item" sec:authorize="isAuthenticated()">
+                            <a class="navbar-brand" href="/">Shop</a>
+                        </li>
+                        <li class="nav-item" sec:authorize="isAuthenticated()">
+                            <a class="nav-link" href="/admin/item/new">상품 등록</a>
+                        </li>
+                        <li class="nav-item" sec:authorize="isAuthenticated()">
+                            <a class="nav-link" href="/admin/items">상품 관리</a>
+                        </li>
+                        <li class="nav-item" sec:authorize="isAuthenticated()">
+                            <a class="nav-link" href="/cart">장바구니</a>
+                        </li>
+                        <li class="nav-item" sec:authorize="isAuthenticated()">
+                            <a class="nav-link" href="/orders">구매이력</a>
+                        </li>
+                        <li class="nav-item" sec:authorize="isAuthenticated()">
+                            <a class="nav-link" href="/board/list">게시판</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" aria-current="page" href="/board/register">글작성</a>
+                        </li>
+                        <li class="nav-item " th:if="${user} != null">
+                            <a class="nav-link" href="/member/update">마이페이지</a>
+                        </li>
+                        <li class="nav-item" sec:authorize="isAnonymous()">
+                            <a class="nav-link" href="/member/login">로그인</a>
+                        </li>
+                        <li class="nav-item " th:if="${user} != null">
+                            <a class="nav-link" href="#">[[${user.mid}]]님 환영합니다.</a>
+                        </li>
+                        <li class="nav-item " th:if="${user} != null">
+                            <div th:if="${user.uuid != null && user.fileName != null}">
+                                <img class="profile-image mt-1 "
+                                     th:src="|/view/s_${user.uuid}_${user.fileName}|">
                             </div>
-                        </div>
-                    </nav>
+                        </li>
+                        <li class="nav-item " th:if="${user} != null">
+                            <div th:if="${user.profileImageServer != null}">
+                                <img class="profile-image mt-1 "
+                                     th:src="${user.profileImageServer}">
+                            </div>
+                        </li>
+                        <li class="nav-item" sec:authorize="isAuthenticated()">
+                            <a class="nav-link" href="/member/logout">로그아웃</a>
+                        </li>
+                    </ul>
                 </div>
-            </div>
-            <!--  Navbar 종료-->
-<script>
-
-</script>
-
-
-            <div layout:fragment="content">
-                <p>블록1 , content 영역</p>
-            </div>
+            </nav>
         </div>
-        <!--    NavBar 닫는 부분-->
+    </div>
+    <!--  Navbar 종료-->
+    <script>
+
+    </script>
 
 
-        <!--헤더, 검색창, 본문 하나로 -->
-        </div>
-        <!--우리가 정의 js 파일 경로-->
-        <!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>-->
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
-                integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
-                crossorigin="anonymous"></script>
-        <script th:src="@{/js/scripts.js}"></script>
-        <th:block layout:fragment="javascript">
-
-        </th:block>
-
-        <div class="row footer">
-            <div class="row fixed-bottom" style="z-index: -100">
-                <footer class="py-1 my-1">
-                    <p class="text-center text-muted">Footer</p>
-                </footer>
-            </div>
-
-        </div>
-        <!--jQuery 추가-->
+    <div layout:fragment="content">
+        <p>블록1 , content 영역</p>
+    </div>
+</div>
+<!--    NavBar 닫는 부분-->
 
 
-    </body>
+<!--헤더, 검색창, 본문 하나로 -->
+</div>
+<!--우리가 정의 js 파일 경로-->
+<!--<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>-->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+<script th:src="@{/js/scripts.js}"></script>
+<th:block layout:fragment="javascript">
+
+</th:block>
+
+<div class="row footer">
+    <div class="row fixed-bottom" style="z-index: -100">
+        <footer class="py-1 my-1">
+            <p class="text-center text-muted">Footer</p>
+        </footer>
+    </div>
+
+</div>
+<!--jQuery 추가-->
+
+
+</body>
 </html>
 
 
