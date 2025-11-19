@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
 
 <div th:fragment="header">
-<!--    <nav class="navbar navbar-expand-sm bg-primary navbar-dark">-->
+    <!--    <nav class="navbar navbar-expand-sm bg-primary navbar-dark">-->
     <nav class="navbar navbar-expand-lg " style="background-color: #b0f89d;">
         <div class="container-fluid">
             <a class="navbar-brand" href="/">Shop</a>
@@ -15,35 +15,57 @@
             </button>
             <div class="collapse navbar-collapse " id="navbarTogglerDemo02">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0 " >
-                <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                    <a class="nav-link" href="/admin/item/new">상품 등록</a>
-                </li>
-                <li class="nav-item" sec:authorize="hasAnyAuthority('ROLE_ADMIN')">
-                    <a class="nav-link" href="/admin/items">상품 관리</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/board/list">게시판</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/cart">장바구니</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/orders">구매이력</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAnonymous()">
-                    <a class="nav-link" href="/member/login">로그인</a>
-                </li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/member/logout">로그아웃</a>
-                </li>
-            </ul>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/admin/item/new">상품 등록</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/admin/items">상품 관리</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/cart">장바구니</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/orders">구매이력</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/board/list">게시판</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="/board/register">글작성</a>
+                    </li>
+                    <li class="nav-item " th:if="${user} != null">
+                        <a class="nav-link" href="/member/update">마이페이지</a>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAnonymous()">
+                        <a class="nav-link" href="/member/login">로그인</a>
+                    </li>
+                    <li class="nav-item " th:if="${user} != null">
+                        <a class="nav-link" href="#">[[${user.mid}]]님 환영합니다.</a>
+                    </li>
+                    <li class="nav-item " th:if="${user} != null">
+                        <div th:if="${user.uuid != null && user.fileName != null}">
+                            <img class="profile-image mt-1 "
+                                 th:src="|/view/s_${user.uuid}_${user.fileName}|">
+                        </div>
+                    </li>
+                    <li class="nav-item " th:if="${user} != null">
+                        <div th:if="${user.profileImageServer != null}">
+                            <img class="profile-image mt-1 "
+                                 th:src="${user.profileImageServer}">
+                        </div>
+                    </li>
+                    <li class="nav-item" sec:authorize="isAuthenticated()">
+                        <a class="nav-link" href="/member/logout">로그아웃</a>
+                    </li>
+                </ul>
+            </div>
             <form class="form-inline my-2 my-lg-0" th:action="@{/}" method="get">
                 <div class="row">
                     <div class="col">
-                <input name="searchQuery" class="form-control mr-sm-1" type="search" placeholder="Search" aria-label="Search">
+                        <input name="searchQuery" class="form-control mr-sm-1" type="search" placeholder="Search" aria-label="Search">
                     </div>
                     <div class="col">
-                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+                        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
                     </div>
                 </div>
             </form>
