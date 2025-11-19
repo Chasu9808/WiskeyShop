@@ -93,7 +93,13 @@ dependencies {
             "jakarta.annotation:jakarta.annotation-api",
             "com.querydsl:querydsl-apt:${queryDslVersion}:jakarta")
 
+    //  JWT
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5' // 또는 jjwt-gson을 사용 가능
 
+    //  Gson
+    implementation 'com.google.code.gson:gson:2.8.9'
 }
 
 //작업중
